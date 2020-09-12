@@ -46,6 +46,7 @@ def setup(args):
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE =512 #TODO verify
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10 
     cfg.OUTPUT_DIR = './bdd100k_default'
+    os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 
     # cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
@@ -72,6 +73,7 @@ def main(args):
 
 if __name__ == "__main__":
     # dataset registration
+    global DatasetCatalog, MetadataCatalog
     register_coco_instances("bdd100k_train", {}, "train_coco.json", "/data5/bdd100k/images/100k/train")
     register_coco_instances("bdd100k_val", {}, "val_coco.json", "/data5/bdd100k/images/100k/val")
 
