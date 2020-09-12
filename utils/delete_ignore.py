@@ -16,7 +16,7 @@ new_coco = ori_coco
 new_coco['annotations'] = new_annos
 new_coco['categories'] = ori_coco['categories'][:-1]
 
-new_fn = 'train_coco.json'
+new_fn = '../train_coco.json'
 with open(new_fn, 'w') as f:
     json.dump(new_coco, f)
     
