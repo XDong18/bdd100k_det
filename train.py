@@ -47,7 +47,7 @@ def setup(args):
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10 
     cfg.OUTPUT_DIR = './bdd100k_default'
 
-    cfg.merge_from_file(args.config_file)
+    # cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
     cfg.freeze()
     default_setup(cfg, args)
