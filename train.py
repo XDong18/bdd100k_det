@@ -6,20 +6,12 @@ import torch
 import detectron2.utils.comm as comm
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
-from detectron2.data import MetadataCatalog
+from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, hooks, launch
-from detectron2.evaluation import (
-    CityscapesInstanceEvaluator,
-    CityscapesSemSegEvaluator,
-    COCOEvaluator,
-    COCOPanopticEvaluator,
-    DatasetEvaluators,
-    LVISEvaluator,
-    PascalVOCDetectionEvaluator,
-    SemSegEvaluator,
-    verify_results,
-)
+from detectron2.evaluation import COCOEvaluator
 from detectron2.modeling import GeneralizedRCNNWithTTA
+from detectron2 import model_zoo
+from detectron2.data.datasets import register_coco_instances
 
 
 class Trainer(DefaultTrainer):
@@ -29,73 +21,11 @@ class Trainer(DefaultTrainer):
     are working on a new research project. In that case you can write your
     own training loop. You can use "tools/plain_train_net.py" as an example.
     """
-
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
-        """
-        Create evaluator(s) for a given dataset.
-        This uses the special metadata "evaluator_type" associated with each builtin dataset.
-        For your own dataset, you can simply create an evaluator manually in your
-        script and do not have to worry about the hacky if-else logic here.
-        """
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
-        evaluator_list = []
-        evaluator_type = MetadataCatalog.get(dataset_name).evaluator_type
-        if evaluator_type in ["sem_seg", "coco_panoptic_seg"]:
-            evaluator_list.append(
-                SemSegEvaluator(
-                    dataset_name,
-                    distributed=True,
-                    num_classes=cfg.MODEL.SEM_SEG_HEAD.NUM_CLASSES,
-                    ignore_label=cfg.MODEL.SEM_SEG_HEAD.IGNORE_VALUE,
-                    output_dir=output_folder,
-                )
-            )
-        if evaluator_type in ["coco", "coco_panoptic_seg"]:
-            evaluator_list.append(COCOEvaluator(dataset_name, cfg, True, output_folder))
-        if evaluator_type == "coco_panoptic_seg":
-            evaluator_list.append(COCOPanopticEvaluator(dataset_name, output_folder))
-        if evaluator_type == "cityscapes_instance":
-            assert (
-                torch.cuda.device_count() >= comm.get_rank()
-            ), "CityscapesEvaluator currently do not work with multiple machines."
-            return CityscapesInstanceEvaluator(dataset_name)
-        if evaluator_type == "cityscapes_sem_seg":
-            assert (
-                torch.cuda.device_count() >= comm.get_rank()
-            ), "CityscapesEvaluator currently do not work with multiple machines."
-            return CityscapesSemSegEvaluator(dataset_name)
-        elif evaluator_type == "pascal_voc":
-            return PascalVOCDetectionEvaluator(dataset_name)
-        elif evaluator_type == "lvis":
-            return LVISEvaluator(dataset_name, cfg, True, output_folder)
-        if len(evaluator_list) == 0:
-            raise NotImplementedError(
-                "no Evaluator for the dataset {} with the type {}".format(
-                    dataset_name, evaluator_type
-                )
-            )
-        elif len(evaluator_list) == 1:
-            return evaluator_list[0]
-        return DatasetEvaluators(evaluator_list)
-
-    @classmethod
-    def test_with_TTA(cls, cfg, model):
-        logger = logging.getLogger("detectron2.trainer")
-        # In the end of training, run an evaluation with TTA
-        # Only support some R-CNN models.
-        logger.info("Running inference with test-time augmentation ...")
-        model = GeneralizedRCNNWithTTA(cfg, model)
-        evaluators = [
-            cls.build_evaluator(
-                cfg, name, output_folder=os.path.join(cfg.OUTPUT_DIR, "inference_TTA")
-            )
-            for name in cfg.DATASETS.TEST
-        ]
-        res = cls.test(cfg, model, evaluators)
-        res = OrderedDict({k + "_TTA": v for k, v in res.items()})
-        return res
+        return COCOEvaluator(dataset_name, cfg, True, output_folder)
 
 
 def setup(args):
@@ -103,6 +33,20 @@ def setup(args):
     Create configs and perform basic setups.
     """
     cfg = get_cfg()
+
+    # set config file
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml"))
+    cfg.DATASETS.TRAIN = ("bdd100k_train",)
+    cfg.DATASETS.TEST = ("bdd100k_val",)
+    cfg.DATALOADER.NUM_WORKERS = 16
+    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")  # Let training initialize from model zoo
+    cfg.SOLVER.IMS_PER_BATCH = 4
+    cfg.SOLVER.BASE_LR = 0.00025  #TODO verify
+    cfg.SOLVER.MAX_ITER = 10000  #TODO verify
+    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE =512 #TODO verify
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10 
+    cfg.OUTPUT_DIR = './bdd100k_default'
+
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
     cfg.freeze()
@@ -119,27 +63,18 @@ def main(args):
             cfg.MODEL.WEIGHTS, resume=args.resume
         )
         res = Trainer.test(cfg, model)
-        if cfg.TEST.AUG.ENABLED:
-            res.update(Trainer.test_with_TTA(cfg, model))
-        if comm.is_main_process():
-            verify_results(cfg, res)
         return res
 
-    """
-    If you'd like to do anything fancier than the standard training logic,
-    consider writing your own training loop (see plain_train_net.py) or
-    subclassing the trainer.
-    """
     trainer = Trainer(cfg)
     trainer.resume_or_load(resume=args.resume)
-    if cfg.TEST.AUG.ENABLED:
-        trainer.register_hooks(
-            [hooks.EvalHook(0, lambda: trainer.test_with_TTA(cfg, trainer.model))]
-        )
     return trainer.train()
 
 
 if __name__ == "__main__":
+    # dataset registration
+    register_coco_instances("bdd100k_train", {}, "train_coco.json", "/data5/bdd100k/images/100k/train")
+    register_coco_instances("bdd100k_val", {}, "val_coco.json", "/data5/bdd100k/images/100k/val")
+
     args = default_argument_parser().parse_args()
     print("Command Line Args:", args)
     launch(
