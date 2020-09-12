@@ -1,6 +1,6 @@
 import json
 
-fn = "/data5/bdd100k/labels/det/coco_format/bdd100k_labels_images_train_coco_release.json"
+fn = "/data5/bdd100k/labels/det/coco_format/bdd100k_labels_images_val_coco_release.json"
 
 with open(fn) as f:
     ori_coco = json.load(f)
@@ -16,7 +16,7 @@ new_coco = ori_coco
 new_coco['annotations'] = new_annos
 new_coco['categories'] = ori_coco['categories'][:-1]
 
-new_fn = '../train_coco.json'
+new_fn = 'val_coco.json'
 with open(new_fn, 'w') as f:
     json.dump(new_coco, f)
     
