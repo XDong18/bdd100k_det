@@ -8,7 +8,7 @@ with open(fn) as f:
 ori_annos = ori_coco['annotations']
 new_annos = []
 for ori_anno in ori_annos:
-    if ori_anno['category_id'] == 11:
+    if ori_anno['category_id'] > 10:
         continue
     new_annos.append(ori_anno)
 
