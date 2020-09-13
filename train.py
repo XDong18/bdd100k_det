@@ -35,17 +35,17 @@ def setup(args):
     cfg = get_cfg()
 
     # set config file
-    cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml"))
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/retinanet_R_101_FPN_3x.yaml"))
     cfg.DATASETS.TRAIN = ("bdd100k_train",)
     cfg.DATASETS.TEST = ("bdd100k_val",)
     cfg.DATALOADER.NUM_WORKERS = 16
-    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")  # Let training initialize from model zoo
+    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/retinanet_R_101_FPN_3x.yaml")  # Let training initialize from model zoo
     cfg.SOLVER.IMS_PER_BATCH = 16
     cfg.SOLVER.BASE_LR = 0.00025  #TODO verify
     cfg.SOLVER.MAX_ITER = 10000  #TODO verify
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE =512 #TODO verify
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10 
-    cfg.OUTPUT_DIR = './bdd100k_default'
+    cfg.OUTPUT_DIR = './bdd100k_retinanet'
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 
     # cfg.merge_from_file(args.config_file)
@@ -60,7 +60,7 @@ def main(args):
     # dataset
     register_coco_instances("bdd100k_train", {}, "train_coco.json", "/data5/bdd100k/images/100k/train")
     register_coco_instances("bdd100k_val", {}, "val_coco.json", "/data5/bdd100k/images/100k/val")
-    
+
     if args.eval_only:
         model = Trainer.build_model(cfg)
         DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
