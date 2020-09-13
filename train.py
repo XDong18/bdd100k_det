@@ -45,7 +45,8 @@ def setup(args):
     cfg.SOLVER.MAX_ITER = 10000  #TODO verify
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE =512 #TODO verify
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10 
-    cfg.OUTPUT_DIR = './bdd100k_retinanet'
+    cfg.MODEL.RETINANET.NUM_CLASSES = 10
+    cfg.OUTPUT_DIR = './bdd100k_retinanet_new'
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 
     # cfg.merge_from_file(args.config_file)
