@@ -40,7 +40,7 @@ def setup(args):
     cfg.DATASETS.TEST = ("bdd100k_val",)
     cfg.DATALOADER.NUM_WORKERS = 16
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/retinanet_R_101_FPN_3x.yaml")  # Let training initialize from model zoo
-    cfg.SOLVER.IMS_PER_BATCH = 16
+    cfg.SOLVER.IMS_PER_BATCH = 32
     cfg.SOLVER.BASE_LR = 0.00025  #TODO verify
     cfg.SOLVER.MAX_ITER = 10000  #TODO verify
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE =512 #TODO verify
