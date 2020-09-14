@@ -35,18 +35,18 @@ def setup(args):
     cfg = get_cfg()
 
     # set config file
-    cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/rpn_R_50_FPN_1x.yaml"))
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml"))
     cfg.DATASETS.TRAIN = ("bdd100k_train",)
     cfg.DATASETS.TEST = ("bdd100k_val",)
     cfg.DATALOADER.NUM_WORKERS = 16
-    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/rpn_R_50_FPN_1x.yaml")  # Let training initialize from model zoo
+    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")  # Let training initialize from model zoo
     cfg.SOLVER.IMS_PER_BATCH = 16
-    cfg.SOLVER.BASE_LR = 0.00025  #TODO verify
+    cfg.SOLVER.BASE_LR = 0.0005  #TODO verify
     cfg.SOLVER.MAX_ITER = 10000  #TODO verify
-    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE =512 #TODO verify
-    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10 
+    # cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE =512 #TODO verify
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10
     cfg.MODEL.RETINANET.NUM_CLASSES = 10
-    cfg.OUTPUT_DIR = './bdd100k_rpn'
+    cfg.OUTPUT_DIR = './bdd100k_fasterrcnn'
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 
     # cfg.merge_from_file(args.config_file)
