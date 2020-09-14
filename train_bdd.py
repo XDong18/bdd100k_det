@@ -45,7 +45,7 @@ def setup(args):
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
     # new added solver arguments
     cfg.SOLVER.CHECKPOINT_PERIOD = 5000
-    # cfg.TEST.EVAL_PERIOD = 5000
+    cfg.TEST.EVAL_PERIOD = 5000
     # end of new arguments
 
     # cfg.merge_from_file(args.config_file)
