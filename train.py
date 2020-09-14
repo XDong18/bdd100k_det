@@ -48,6 +48,11 @@ def setup(args):
     cfg.MODEL.RETINANET.NUM_CLASSES = 10
     cfg.OUTPUT_DIR = './bdd100k_fasterrcnn'
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
+    # new added solver arguments
+    cfg.SOLVER.CHECKPOINT_PERIOD = 2000
+    cfg.SOLVER.TEST.EVAL_PERIOD = 2000
+
+    # end of new arguments
 
     # cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
