@@ -50,7 +50,7 @@ def setup(args):
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
     # new added solver arguments
     cfg.SOLVER.CHECKPOINT_PERIOD = 2000
-    cfg.SOLVER.TEST.EVAL_PERIOD = 2000
+    cfg.TEST.EVAL_PERIOD = 2000
 
     # end of new arguments
 
