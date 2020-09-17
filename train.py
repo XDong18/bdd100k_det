@@ -35,7 +35,7 @@ def setup(args):
     cfg = get_cfg()
 
     # set config file
-    cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml"))
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_R_101_FPN_1x_crop.yaml"))
     cfg.DATASETS.TRAIN = ("bdd100k_train",)
     cfg.DATASETS.TEST = ("bdd100k_val",)
     cfg.DATALOADER.NUM_WORKERS = 16
