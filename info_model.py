@@ -9,7 +9,7 @@ if __name__ == "__main__":
     os.makedirs(temp_dir, exist_ok=True)
 
     sha256 = hashlib.sha256()
-    model_path = 'bdd100k_faster_rcnn_R_101_FPN_1x/bdd100k_faster_rcnn_R_101_FPN_1x-d488e6cf.pth'
+    model_path = 'bdd100k_retinanet_R_50_FPN_1x/bdd100k_retinanet_R_50_FPN_1x-303595e5.pth'
     with open(model_path, 'rb') as u:
         while True:
             buffer = u.read(8192)
@@ -18,7 +18,7 @@ if __name__ == "__main__":
             sha256.update(buffer)
     
     digest = sha256.hexdigest()[:8]
-    model_out_name = 'bdd100k' + '-' 'detectron2' + '-' + 'faster_rcnn_r101_fpn-1x' + '-' + digest + '.pth'
+    model_out_name = 'bdd100k' + '-' 'detectron2' + '-' + 'retinanet_r50_fpn-1x' + '-' + digest + '.pth'
     model_out_name = os.path.join(out_dir, model_out_name)
 
     with open(model_out_name, 'wb') as f:
