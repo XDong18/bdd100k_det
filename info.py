@@ -61,6 +61,7 @@ if __name__ == "__main__":
         anno['bbox'] = instance['bbox']
         anno['area'] = float(instance['bbox'][2] * instance['bbox'][3])
         anno['score'] = instance['score']
+        new_result_data['annotations'].append(anno)
     
     coco_temp_result_file = os.path.join(temp_dir, 'bdd100k_faster_rcnn_R_50_FPN_1x.json')
     with open(coco_temp_result_file, 'w') as f:
