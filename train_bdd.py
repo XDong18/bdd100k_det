@@ -24,7 +24,7 @@ class Trainer(DefaultTrainer):
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
         if output_folder is None:
-            output_folder = os.path.join(cfg.OUTPUT_DIR, "inference_test")
+            output_folder = os.path.join(cfg.OUTPUT_DIR, "inference_val")
         return COCOEvaluator(dataset_name, cfg, True, output_folder)
 
 
@@ -59,7 +59,7 @@ def main(args):
     cfg = setup(args)
     # dataset
     register_coco_instances("bdd100k_train", {}, "train_coco.json", "/shared/xudongliu/bdd100k/100k/train")
-    register_coco_instances("bdd100k_test", {}, "/shared/xudongliu/bdd100k/labels/bdd100k_labels_images_det_coco_test.json", "/shared/xudongliu/bdd100k/100k/test")
+    register_coco_instances("bdd100k_test", {}, "val_coco.json", "/shared/xudongliu/bdd100k/100k/val")
 
     if args.eval_only:
         model = Trainer.build_model(cfg)
