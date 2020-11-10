@@ -3,15 +3,15 @@ import os
 from collections import OrderedDict
 import torch
 
-import dl_lib.utils.comm as comm
-from dl_lib.checkpoint import DetectionCheckpointer
-from dl_lib.config import get_cfg
-from dl_lib.data import MetadataCatalog, DatasetCatalog
-from dl_lib.engine import DefaultTrainer, default_argument_parser, default_setup, hooks, launch
-from dl_lib.evaluation import COCOEvaluator
-from dl_lib.modeling import GeneralizedRCNNWithTTA
-from dl_lib import model_zoo
-from dl_lib.data.datasets import register_coco_instances
+import detectron2.utils.comm as comm
+from detectron2.checkpoint import DetectionCheckpointer
+from detectron2.config import get_cfg
+from detectron2.data import MetadataCatalog, DatasetCatalog
+from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, hooks, launch
+from detectron2.evaluation import COCOEvaluator
+from detectron2.modeling import GeneralizedRCNNWithTTA
+from detectron2 import model_zoo
+from detectron2.data.datasets import register_coco_instances
 
 
 class Trainer(DefaultTrainer):
