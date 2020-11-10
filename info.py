@@ -42,7 +42,9 @@ def transform(annFile):
 
 if __name__ == "__main__":
     out_dir = 'report_dir'
+    temp_dir = 'temp_dir'
     os.makedirs(out_dir, exist_ok=True)
+    os.makedirs(temp_dir, exist_ok=True)
 
     with open(os.path.join('bdd100k_faster_rcnn_R_50_FPN_1x', 'inference_test/coco_instances_results.json')) as f:
         temp_result_data = json.load(f)
@@ -60,7 +62,7 @@ if __name__ == "__main__":
         anno['area'] = float(instance['bbox'][2] * instance['bbox'][3])
         anno['score'] = instance['score']
     
-    coco_temp_result_file = ''
+    coco_temp_result_file = os.path.join(temp_dir, 'bdd100k_faster_rcnn_R_50_FPN_1x.json')
     with open(coco_temp_result_file, 'w') as f:
         json.dump(new_result_data, f)
     
