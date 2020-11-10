@@ -35,7 +35,7 @@ def setup(args):
     cfg = get_cfg()
 
     # set config file
-    cfg.merge_from_file("bdd100k_faster_rcnn_R_101_FPN_1x/config.yaml")
+    cfg.merge_from_file("configs/BDD100K-Detection/faster_rcnn/faster_rcnn_R_101_FPN_1x_crop.yaml")
     cfg.DATASETS.TRAIN = ("bdd100k_train",)
     cfg.DATASETS.TEST = ("bdd100k_test",)
     # cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")  # Let training initialize from model zoo
