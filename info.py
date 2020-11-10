@@ -44,7 +44,7 @@ if __name__ == "__main__":
     out_dir = 'report_dir'
     os.makedirs(out_dir, exist_ok=True)
 
-    with open(os.path.join('', 'inference_test/coco_instances_results.json')) as f:
+    with open(os.path.join('bdd100k_faster_rcnn_R_50_FPN_1x', 'inference_test/coco_instances_results.json')) as f:
         temp_result_data = json.load(f)
 
     with open('/shared/xudongliu/bdd100k/labels/bdd100k_labels_images_det_coco_test.json') as f:
