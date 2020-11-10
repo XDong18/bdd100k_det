@@ -46,7 +46,7 @@ if __name__ == "__main__":
     os.makedirs(out_dir, exist_ok=True)
     os.makedirs(temp_dir, exist_ok=True)
 
-    with open(os.path.join('bdd100k_retinanet_R_50_FPN_1x', 'inference_test/coco_instances_results.json')) as f:
+    with open(os.path.join('bdd100k_retinanet_new', 'inference_test/coco_instances_results.json')) as f:
         temp_result_data = json.load(f)
 
     with open('/shared/xudongliu/bdd100k/labels/bdd100k_labels_images_det_coco_test.json') as f:
@@ -63,11 +63,11 @@ if __name__ == "__main__":
         anno['score'] = instance['score']
         new_result_data['annotations'].append(anno)
     
-    coco_temp_result_file = os.path.join(temp_dir, 'bdd100k_retinanet_R_50_FPN_1x.json')
+    coco_temp_result_file = os.path.join(temp_dir, 'bdd100k_retinanet_new.json')
     with open(coco_temp_result_file, 'w') as f:
         json.dump(new_result_data, f)
     
-    test_json_name = 'bdd100k' + '-' 'detectron2' + '-' + 'retinanet_r50_fpn-1x' + '-' + 'results' + '.json'
+    test_json_name = 'bdd100k' + '-' 'detectron2' + '-' + 'retinanet_r101_fpn-1x' + '-' + 'results' + '.json'
     test_json_name = os.path.join(out_dir, test_json_name)
 
     bdd_label = transform(coco_temp_result_file)
