@@ -35,13 +35,13 @@ def setup(args):
     cfg = get_cfg()
 
     # set config file
-    cfg.merge_from_file("bdd100k_retinanet_new/config.yaml")
+    cfg.merge_from_file("configs/BDD00K-InstanceSegmentation/mask_rcnn_R_50_FPN_1x.yaml")
     cfg.DATASETS.TRAIN = ("bdd100k_train",)
     cfg.DATASETS.TEST = ("bdd100k_test",)
     # cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")  # Let training initialize from model zoo
 
 
-    cfg.OUTPUT_DIR = './bdd100k_retinanet_new'
+    cfg.OUTPUT_DIR = './bdd100k_maskrcnn_720_8bs'
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
     # new added solver arguments
     cfg.SOLVER.CHECKPOINT_PERIOD = 5000
@@ -58,8 +58,8 @@ def setup(args):
 def main(args):
     cfg = setup(args)
     # dataset
-    register_coco_instances("bdd100k_train", {}, "train_coco.json", "/shared/xudongliu/bdd100k/100k/train")
-    register_coco_instances("bdd100k_test", {}, "val_coco.json", "/shared/xudongliu/bdd100k/100k/val")
+    register_coco_instances("bdd100k_train", {}, "/shared/xudongliu/bdd100k/labels/ins_seg/ins_seg_train.json", "/shared/xudongliu/bdd100k/100k/train")
+    register_coco_instances("bdd100k_test", {}, "/shared/xudongliu/bdd100k/labels/ins_seg/ins_seg_val.json", "/shared/xudongliu/bdd100k/100k/val")
 
     if args.eval_only:
         model = Trainer.build_model(cfg)
