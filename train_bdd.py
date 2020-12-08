@@ -35,17 +35,17 @@ def setup(args):
     cfg = get_cfg()
 
     # set config file
-    cfg.merge_from_file("configs/BDD00K-InstanceSegmentation/mask_rcnn_R_50_FPN_1x.yaml")
+    cfg.merge_from_file("configs/BDD00K-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
     cfg.DATASETS.TRAIN = ("bdd100k_train",)
     cfg.DATASETS.TEST = ("bdd100k_test",)
     # cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")  # Let training initialize from model zoo
 
 
-    cfg.OUTPUT_DIR = './bdd100k_maskrcnn_720_8bs'
+    cfg.OUTPUT_DIR = './bdd100k_maskrcnn_720_8bs_0.01_3x'
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
     # new added solver arguments
-    cfg.SOLVER.CHECKPOINT_PERIOD = 5000
-    cfg.TEST.EVAL_PERIOD = 5000
+    cfg.SOLVER.CHECKPOINT_PERIOD = 500
+    cfg.TEST.EVAL_PERIOD = 500
     # end of new arguments
 
     # cfg.merge_from_file(args.config_file)
