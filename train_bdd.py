@@ -59,7 +59,7 @@ def main(args):
     cfg = setup(args)
     # dataset
     register_coco_instances("bdd100k_train", {}, "/shared/xudongliu/bdd100k/labels/ins_seg/ins_seg_train.json", "/data5/bdd100k/images/10k/train")
-    register_coco_instances("bdd100k_test", {}, "/shared/xudongliu/bdd100k/labels/ins_seg/ins_seg_val.json", "//data5/bdd100k/images/10k/val")
+    register_coco_instances("bdd100k_test", {}, "/shared/xudongliu/bdd100k/labels/ins_seg/ins_seg_val.json", "/data5/bdd100k/images/10k/val")
 
     if args.eval_only:
         model = Trainer.build_model(cfg)
