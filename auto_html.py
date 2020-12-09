@@ -11,7 +11,7 @@ with open (out_fn, 'w') as f:
     for img in img_list:
         name = "<p>" + img + "</p>\n"
         f.write(name)
-        new_line = "<img src='" + os.path.join(img_dir, img) + "'>\n"
+        new_line = "<img src='../" + os.path.join(img_dir, img) + "'>\n"
         f.write(new_line)
 
     # f.write("<img src='" + "test.jpg" + "'>\n")
