@@ -29,13 +29,13 @@ def setup(args):
     cfg = get_cfg()
     add_tensormask_config(cfg)
     # set config file
-    cfg.merge_from_file("configs/BDD00K-InstanceSegmentation/tensormask_r50_3x_bs8.yaml")
+    cfg.merge_from_file("configs/BDD00K-InstanceSegmentation/tensormask_r101_3x_multi_scale_bs16_bdd100k.yaml")
     cfg.DATASETS.TRAIN = ("bdd100k_train",)
     cfg.DATASETS.TEST = ("bdd100k_test",)
     # cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")  # Let training initialize from model zoo
 
 
-    cfg.OUTPUT_DIR = './tensormask_r50_3x_bs8'
+    cfg.OUTPUT_DIR = './tensormask_r101_3x_multi_scale_bs16_bdd100k'
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
     # new added solver arguments
     cfg.SOLVER.CHECKPOINT_PERIOD = 500
