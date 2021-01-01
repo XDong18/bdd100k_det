@@ -5,6 +5,8 @@ MODEL:
     DEPTH: 101
     OUT_FEATURES: ["res2", "res3", "res4", "res5"]
   META_ARCHITECTURE: "TensorMask"
+  ROI_HEADS:
+    NUM_CLASSES: 8
   BACKBONE:
     NAME: "build_retinanet_resnet_fpn_backbone"
   ANCHOR_GENERATOR:
