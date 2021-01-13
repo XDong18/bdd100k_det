@@ -1,2 +1,2 @@
 export CUDA_VISIBLE_DEVICES=1,8,9
-python train_tensormask.py --num-gpus 3 --dist-url auto --eval-only MODEL.WEIGHTS ./tensormask_r101_3x_multi_scale_bs16_bdd100k/model_0029999.pth
+python train_bdd.py --num-gpus 3 --dist-url auto --eval-only MODEL.WEIGHTS ./mask_rcnn_r_101_fpn_yanzaho/model_0014499.pth
